@@ -1,30 +1,27 @@
 ﻿using Tutorial4.Database;
 using Tutorial4.Models;
 
-namespace Tutorial4.Endpoints;
-
-public static class AnimalEndpoints
+namespace Tutorial4.Endpoints
 {
-    public static void MapAnimalEndpoints(this WebApplication app)
+    public static class AnimalEndpoints
     {
-        app.MapGet("/animals", () =>
+        public static void MapAnimalEndpoints(this WebApplication app)
         {
-            // 200 - Ok
-            // 201 - Created
-            // 400 - Bad Request
-            // 404 - Not Found
-            var animals = StaticData.animals;
-            return Results.Ok(animals);
-        });
+            app.MapGet("/animals", () =>
+            {
+                var animals = StaticData.animals;
+                return Results.Ok(animals);
+            });
 
-        app.MapGet("/animals/{id}", (int id) =>
-        {
-            return Results.Ok(id);
-        });
+            app.MapGet("/animals/{id}", (int id) =>
+            {
+                return Results.Ok(id);
+            });
 
-        app.MapPost("/animals", (Animal animal) =>
-        {
-            return Results.Created("", animal);
-        });
+            app.MapPost("/animals", (Animal animal) =>
+            {
+                return Results.Created("", animal);
+            });
+        }
     }
 }
