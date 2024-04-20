@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Tutorial4.Database;
+using Tutorial4.Models;
 
 namespace Tutorial4.Controllers
 {
@@ -11,30 +12,54 @@ namespace Tutorial4.Controllers
         [HttpGet]
         public IActionResult GetAnimals()
         {
-            var animals = new MockDb().Animals;
+            var animals = StaticData.animals;
             return Ok(animals);
         }
         
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetAnimal(int id)
         {
-            return Ok(id);
+            var animal = StaticData.animals.FirstOrDefault(a => a.Id == id);
+            if (animal == null)
+            {
+                return NotFound($"Animal with id: {id} was not found.");
+            }
+            return Ok(animal);
         }
         
         [HttpPost]
-        public IActionResult AddAnimal()
+        public IActionResult AddAnimal(Animal animal)
         {
-            return Created();
+            StaticData.animals.Add(animal);
+            return StatusCode(StatusCodes.Status201Created);
         }
-        [HttpPut]
-        public IActionResult EditAnimal()
+        
+        [HttpPut("{id:int}")]
+        public IActionResult EditAnimal(int id, Animal animal)
         {
-            return Created();
+            var animalToEdit = StaticData.animals.FirstOrDefault(a=> a.Id == id);
+            if (animalToEdit == null)
+            {
+                return NotFound($"Animal with id: {id} was not found.");
+            }
+
+            StaticData.animals.Remove(animalToEdit);
+            StaticData.animals.Add(animal);
+            
+            return NoContent();
         }
-        [HttpDelete]
-        public IActionResult DeleteAnimal()
+        
+        [HttpDelete("{id:int}")]
+        public IActionResult DeleteAnimal(int id)
         {
-            return Created();
+            var animalToDelete = StaticData.animals.FirstOrDefault(a => a.Id == id);
+            if (animalToDelete == null)
+            {
+                return NoContent();
+            }
+
+            StaticData.animals.Remove(animalToDelete);
+            return NoContent();
         }
     }
 }
